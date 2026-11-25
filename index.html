@@ -302,6 +302,39 @@ button.srow{width:100%;background:none;border-left:0;border-right:0;border-top:0
 #runFin .strip{--sh:80px}
 .saved{display:flex;align-items:center;gap:8px;font-weight:800;font-stretch:70%;text-transform:uppercase;letter-spacing:.08em}
 .saved svg{width:20px;height:20px}
+/* shape dots, pocket mode, GPS card, sound lab */
+.shape{display:flex;align-items:center;justify-content:center;gap:12px;height:30px;margin:10px 0 2px}
+.shape i{display:block;border-radius:50%;background:var(--on);opacity:.85;transform:translateY(var(--y,0))}
+.shape.go i{animation:dotin .45s ease-out both;animation-delay:var(--d,0s)}
+@keyframes dotin{from{opacity:0;transform:translateY(calc(var(--y,0px) + 10px)) scale(.3)}to{opacity:.85;transform:translateY(var(--y,0)) scale(1)}}
+.rpill.pkb{border:0;color:inherit;min-height:40px;padding:0 14px}
+.rpill.pkb svg{width:16px;height:16px}
+.rpill.pulse i{animation:blink 1s ease-in-out infinite}
+@keyframes blink{50%{opacity:.15}}
+.gcard{background:color-mix(in srgb,var(--on) 14%,transparent);border-radius:16px;padding:12px 14px;font-weight:700;font-size:.9rem;line-height:1.3}
+#pocket{position:absolute;inset:0;z-index:9;background:#000;color:#5c5c5c;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;touch-action:none;transition:color 1.5s}
+#pocket[hidden]{display:none}
+#pocket.dim{color:#292929}
+.pk-act{font-weight:800;font-stretch:70%;text-transform:uppercase;letter-spacing:.14em;font-size:.95rem}
+.pk-time{font-weight:900;font-stretch:62%;font-size:2.6rem;font-variant-numeric:tabular-nums;line-height:1}
+.pk-gps{width:6px;height:6px;border-radius:50%;margin-top:12px;border:1px solid currentColor}
+.pk-gps.live{background:currentColor} .pk-gps.none{visibility:hidden}
+.pk-hold{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 36px);transform:translateX(-50%);border:0;background:none;color:inherit;display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:800;font-stretch:70%;text-transform:uppercase;letter-spacing:.12em;font-size:.72rem;touch-action:none;-webkit-touch-callout:none}
+.pk-hold svg{overflow:visible}
+.pk-hold .trk{stroke:currentColor;opacity:.5;fill:none}
+.pk-hold .ring{stroke:currentColor;fill:none;stroke-linecap:round;stroke-dasharray:125.66;stroke-dashoffset:125.66;transform:rotate(-90deg);transform-origin:center}
+.vol{-webkit-appearance:none;appearance:none;background:transparent;width:60%;max-width:200px;height:48px;margin:0}
+.vol::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:var(--line)}
+.vol::-moz-range-track{height:6px;border-radius:3px;background:var(--line)}
+.vol::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:var(--ink);border:0;margin-top:-10px}
+.vol::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:var(--ink);border:0}
+.srow.col{flex-direction:column;align-items:stretch;gap:8px;padding:12px 0}
+.lab{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.labb{border:0;background:var(--sunk);color:var(--ink);border-radius:16px;min-height:76px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-weight:800;font-stretch:70%;text-transform:uppercase;letter-spacing:.06em;font-size:.82rem;min-width:0}
+.labb:active{background:var(--ink);color:var(--bg)}
+.labb .gl svg{width:72px;height:30px;max-width:100%}
+#sChoice{z-index:80}
+@media (prefers-reduced-motion:reduce){.shape.go i,.rpill.pulse i{animation:none!important}#pocket{transition:none}}
 @media (max-height:700px){.rb.big{width:76px;height:76px}.rb.sm{width:52px;height:52px}.rstrip{--sh:36px}.actname{font-size:3rem}.count{font-size:clamp(100px,30vw,160px)}#runLive{gap:8px}}
 @media (prefers-reduced-motion:reduce){.sheet,.scrim,.sw span,.sw span::after,.toast{transition:none!important}.pop,#rWipe.go{animation:none!important}}
 </style>
@@ -343,13 +376,27 @@ button.srow{width:100%;background:none;border-left:0;border-right:0;border-top:0
           <div class="srow"><div class="tx"><b>Run pace</b></div><div id="paceRun"></div></div>
           <div class="srow"><div class="tx"><b>Walk pace</b></div><div id="paceWalk"></div></div>
         </div></div>
+      <div class="group"><h2 class="lbl">Sounds</h2>
+        <div class="glist">
+          <div class="srow"><div class="tx"><b>Sounds</b><span>Movement tags and countdown ticks</span></div><label class="sw"><input type="checkbox" role="switch" id="tSound" aria-label="Sounds"><span></span></label></div>
+          <div class="srow"><div class="tx"><b>Volume</b></div><input type="range" class="vol" id="vol" min="0.1" max="1" step="0.05" aria-label="Volume"></div>
+          <div class="srow col"><div class="tx"><b>Voice</b><span>Spoken just after each tag</span></div>
+            <div class="seg" id="voiceSeg" role="group" aria-label="Voice"><button type="button" data-v="off" aria-pressed="false">Off</button><button type="button" data-v="short" aria-pressed="false">Short</button><button type="button" data-v="full" aria-pressed="false">Full</button></div></div>
+        </div>
+        <h2 class="lbl" style="margin:16px 0 8px">Sound lab</h2>
+        <div class="lab" id="lab"></div></div>
       <div class="group"><h2 class="lbl">Cues</h2>
         <div class="glist">
-          <div class="srow"><div class="tx"><b>Voice</b><span>Say each step out loud</span></div><label class="sw"><input type="checkbox" role="switch" id="tVoice" aria-label="Voice"><span></span></label></div>
-          <div class="srow"><div class="tx"><b>Beeps</b><span>Tone at each change</span></div><label class="sw"><input type="checkbox" role="switch" id="tBeep" aria-label="Beeps"><span></span></label></div>
-          <div class="srow"><div class="tx"><b>Countdown beeps</b><span>Last three seconds of a step</span></div><label class="sw"><input type="checkbox" role="switch" id="tCd" aria-label="Countdown beeps"><span></span></label></div>
+          <div class="srow"><div class="tx"><b>Countdown ticks</b><span>Last three seconds of a step</span></div><label class="sw"><input type="checkbox" role="switch" id="tCd" aria-label="Countdown ticks"><span></span></label></div>
           <div class="srow"><div class="tx"><b>Vibration</b><span>Not on every phone or browser</span></div><label class="sw"><input type="checkbox" role="switch" id="tVib" aria-label="Vibration"><span></span></label></div>
         </div></div>
+      <div class="group"><h2 class="lbl">Screen off</h2>
+        <div class="glist">
+          <div class="srow"><div class="tx"><b>Screen-off mode</b><span>Keep the timer alive when the phone locks</span></div><label class="sw"><input type="checkbox" role="switch" id="tScreenOff" aria-label="Screen-off mode"><span></span></label></div>
+          <div class="srow"><div class="tx"><b>Lock-screen alerts</b><span>A notification at each step</span></div><label class="sw"><input type="checkbox" role="switch" id="tAlerts" aria-label="Lock-screen alerts"><span></span></label></div>
+          <div class="srow"><div class="tx"><b>Distance workouts: Pocket mode</b><span>Black screen, GPS stays on</span></div><label class="sw"><input type="checkbox" role="switch" id="tDistPocket" aria-label="Distance workouts: Pocket mode"><span></span></label></div>
+        </div>
+        <p class="muted small" style="margin-top:8px">Keeps cues playing with the screen locked. GPS needs the screen on: Pocket mode keeps it on but black.</p></div>
       <div class="group"><h2 class="lbl">Theme</h2>
         <div class="seg" id="themeSeg" role="group" aria-label="Theme">
           <button type="button" data-v="system" aria-pressed="false">System</button><button type="button" data-v="light" aria-pressed="false">Light</button><button type="button" data-v="dark" aria-pressed="false">Dark</button>
@@ -408,15 +455,25 @@ button.srow{width:100%;background:none;border-left:0;border-right:0;border-top:0
     </div>
   </div>
 
+  <!-- distance workout start choice -->
+  <div class="sheet" id="sChoice" role="dialog" aria-modal="true" aria-labelledby="cTitle">
+    <div class="grab"></div>
+    <div class="sh-head"><h2 id="cTitle">Keep GPS live</h2><button class="sq" type="button" id="cClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="sh-body"><p class="muted">GPS needs the screen on. Pocket mode keeps it on but black, so your distance keeps counting in your pocket.</p></div>
+    <div class="sh-foot"><button class="btn primary full tall" id="chPocket" type="button" style="min-height:56px;font-size:1.2rem">Start in Pocket mode</button><button class="btn full" id="chNormal" type="button">Start normally</button></div>
+  </div>
+
   <!-- run screen -->
   <div id="run" data-act="done" hidden>
     <div id="rWipe"></div>
     <div id="runPre" hidden><div id="pNum" role="timer">3</div><div class="lbl" id="pName"></div></div>
     <div id="runLive">
       <div class="rbars" id="rBars" aria-hidden="true"></div>
-      <div class="rtop"><span class="nm" id="rName"></span><span class="rpill" id="rGps"><i></i><span id="rGpsT"></span></span></div>
+      <div class="rtop"><span class="nm" id="rName"></span><span style="display:flex;gap:8px;align-items:center"><button class="rpill pkb" id="cPocket" type="button" aria-label="Pocket mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>Pocket</button><span class="rpill" id="rGps"><i></i><span id="rGpsT"></span></span></span></div>
+      <div class="gcard" id="gpsCard" hidden>Location is blocked. In Chrome: tap the lock icon or Site settings, then Location, Allow.</div>
       <div class="rmid">
         <div class="actname" id="rAct"></div>
+        <div class="shape" id="rShape" aria-hidden="true"></div>
         <div class="count" id="rCount" role="timer" aria-live="off">0:00</div>
         <div class="cunit" id="rUnit"></div>
         <div class="pbar" aria-hidden="true"><b id="rFill"></b></div>
@@ -431,6 +488,10 @@ button.srow{width:100%;background:none;border-left:0;border-right:0;border-top:0
         <button class="rb sm" id="cNext" type="button" aria-label="Next step"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 5H18v14h-2.5zM4 5.5v13a1 1 0 0 0 1.6.8l8.8-6.5a1 1 0 0 0 0-1.6L5.6 4.7A1 1 0 0 0 4 5.5z"/></svg></button>
       </div>
       <button class="hold" id="cEnd" type="button"><svg viewBox="0 0 48 48" aria-hidden="true"><circle class="trk" cx="24" cy="24" r="20" stroke-width="4"/><circle class="ring" cx="24" cy="24" r="20" stroke-width="4"/><rect class="sqr" x="17" y="17" width="14" height="14" rx="2"/></svg>Hold to end</button>
+    </div>
+    <div id="pocket" hidden aria-label="Pocket mode">
+      <div class="pk-act" id="pkAct"></div><div class="pk-time" id="pkTime"></div><div class="pk-gps none" id="pkGps"></div>
+      <button class="pk-hold" id="pkHold" type="button"><svg viewBox="0 0 48 48" width="52" height="52" aria-hidden="true"><circle class="trk" cx="24" cy="24" r="20" stroke-width="3"/><circle class="ring" cx="24" cy="24" r="20" stroke-width="3"/></svg><span>Hold to unlock</span></button>
     </div>
     <div id="rPause" hidden>
       <div class="disp">Paused</div>
@@ -456,7 +517,7 @@ button.srow{width:100%;background:none;border-left:0;border-right:0;border-top:0
 <script>
 (() => {
 'use strict';
-const APP_VERSION = '1.1.0'; /* keep in step with VERSION in sw.js */
+const APP_VERSION = '1.2.0'; /* keep in step with VERSION in sw.js */
 const $ = id => document.getElementById(id);
 const h = (tag, a = {}, kids = []) => {
   const e = document.createElement(tag);
@@ -494,11 +555,15 @@ const PRESETS = [
   { id: 'p4', name: 'Pyramid', preset: true, items: [st('Warm-up','time',300), st('Run','time',60), st('Walk','time',60), st('Run','time',120), st('Walk','time',60), st('Run','time',180), st('Walk','time',90), st('Run','time',120), st('Walk','time',60), st('Run','time',60), st('Cool-down','time',300)] }
 ];
 let user = [], hist = [], selId = 'p1';
-const settings = { runPace: 390, walkPace: 600, voice: true, beep: true, vib: true, cd: true, theme: 'system' };
+const settings = { runPace: 390, walkPace: 600, voice: 'short', sound: true, volume: 0.9, vib: true, cd: true, theme: 'system', screenOff: true, alerts: false, distPocket: true };
 (() => {
   const u = S.get('workouts'); if (Array.isArray(u)) user = u;
   const hh = S.get('history'); if (Array.isArray(hh)) hist = hh;
-  const s = S.get('settings'); if (s && typeof s === 'object') for (const k in settings) if (k in s) settings[k] = s[k];
+  const s = S.get('settings'); if (s && typeof s === 'object') { for (const k in settings) if (k in s) settings[k] = s[k];
+    if (typeof s.voice === 'boolean') settings.voice = s.voice ? 'short' : 'off';
+    if (s.beep === false && !('sound' in s)) settings.sound = false;
+    if (!['off', 'short', 'full'].includes(settings.voice)) settings.voice = 'short';
+    settings.volume = Math.min(1, Math.max(0, +settings.volume || 0.9)); }
   const sel = S.get('sel'); if (sel) selId = sel;
 })();
 const all = () => PRESETS.concat(user);
@@ -513,7 +578,7 @@ const fmtDist = m => distParts(m).join(' ');
 const pace = act => RUNLIKE[act] ? settings.runPace : settings.walkPace;
 const flatten = items => { const o = [];
   items.forEach(it => { if (it.type === 'step') o.push({ act: it.act, kind: it.kind, val: it.val, rep: null });
-    else for (let r = 1; r <= it.count; r++) it.steps.forEach(s => o.push({ act: s.act, kind: s.kind, val: s.val, rep: { i: r, n: it.count } })); });
+    else for (let r = 1; r <= it.count; r++) it.steps.forEach((s, j) => o.push({ act: s.act, kind: s.kind, val: s.val, rep: { i: r, n: it.count }, rj: j })); });
   return o; };
 const planSec = s => s.kind === 'time' ? s.val : s.val / 1000 * pace(s.act);
 const planDist = s => s.kind === 'time' ? s.val / pace(s.act) * 1000 : s.val;
@@ -568,7 +633,7 @@ addEventListener('popstate', () => {
   if (!$('conf').hidden) { const f = confNo; closeConf(); if (layers.length) history.pushState({ iv: 'keep' }, ''); if (f) f(); return; }
   const top = layers[layers.length - 1]; if (!top) return;
   if (top.name === 'run') {
-    if (R) { history.pushState({ iv: 'run' }, ''); askEnd(); return; }
+    if (R) { history.pushState({ iv: 'run' }, ''); if (!pocketOn) askEnd(); return; }
     layers.pop(); top.close(); popLayersTo(0); return;
   }
   layers.pop(); top.close();
@@ -605,17 +670,20 @@ function renderWorkouts() {
 }
 
 /* ---------- detail sheet ---------- */
-let sheetOpen = { sDetail: false, sBuild: false };
+let sheetOpen = { sDetail: false, sBuild: false, sChoice: false };
 function showSheet(id) { $(id).classList.add('on'); sheetOpen[id] = true; $('scrim').classList.add('on'); }
-function hideSheet(id) { $(id).classList.remove('on'); sheetOpen[id] = false; if (!sheetOpen.sDetail && !sheetOpen.sBuild) $('scrim').classList.remove('on'); }
+function hideSheet(id) { $(id).classList.remove('on'); sheetOpen[id] = false; if (!Object.values(sheetOpen).some(Boolean)) $('scrim').classList.remove('on'); }
 function openSheet(id) { if (sheetOpen[id]) return; showSheet(id); pushLayer(id, () => hideSheet(id)); }
 const closeTop = () => popLayersTo(layers.length - 1);
 $('scrim').addEventListener('click', closeTop);
 $('dClose').addEventListener('click', closeTop);
 $('bClose').addEventListener('click', closeTop);
+$('cClose').addEventListener('click', closeTop);
+$('chPocket').addEventListener('click', () => { settings.distPocket = true; saveSettings(); startRun({ pocket: true }); });
+$('chNormal').addEventListener('click', () => startRun({ pocket: false }));
 
 let confirmDel = false;
-function openDetail(id) { selId = id; S.set('sel', id); confirmDel = false; renderWorkouts(); renderDetail(); openSheet('sDetail'); }
+function openDetail(id) { selId = id; S.set('sel', id); confirmDel = false; renderWorkouts(); renderDetail(); openSheet('sDetail'); warmGps(); }
 $('heroMore').addEventListener('click', () => openDetail(selId));
 function railStep(s) { return h('div', { class: 'st a-' + AK[s.act] }, [h('span', { class: 'n', text: s.act }), h('span', { class: 'v', text: s.kind === 'time' ? fmt(s.val) : s.val + ' m' })]); }
 function renderDetail() {
@@ -642,8 +710,8 @@ function renderDetail() {
     h('button', { class: 'btn', type: 'button', id: 'dDup', text: 'Duplicate', onclick: () => openBuilder(w, 'dup') }),
     h('button', { class: 'btn ghost', type: 'button', id: 'dDel', style: 'color:var(--stop)', text: 'Delete', onclick: () => { confirmDel = true; renderDetail(); } }));
 }
-$('dStart').addEventListener('click', () => startRun());
-$('btnStart').addEventListener('click', () => startRun());
+$('dStart').addEventListener('click', requestStart);
+$('btnStart').addEventListener('click', requestStart);
 
 /* ---------- number widgets ---------- */
 function mmss(get, onValid, label) {
@@ -781,18 +849,37 @@ function applyTheme() {
   document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.setAttribute('content', settings.theme === 'system' ? (m.media.includes('dark') ? '#000000' : '#FFFFFF') : (dark ? '#000000' : '#FFFFFF')));
 }
 let settingsBuilt = false;
+const TOG = [['tCd', 'cd'], ['tVib', 'vib'], ['tSound', 'sound'], ['tScreenOff', 'screenOff'], ['tDistPocket', 'distPocket']];
+const LAB = [['run', 'Run'], ['sprint', 'Sprint'], ['jog', 'Jog'], ['walk', 'Walk'], ['rest', 'Rest'], ['warm', 'Warm-up'], ['cool', 'Cool-down'], ['finish', 'Finish'], ['cdUp', 'Countdown up'], ['cdDown', 'Countdown down'], ['half', 'Halfway'], ['lastOne', 'Last one']];
+let audH = null;
+function audition(name) { ensureAudio(); if (!AC || !CH) return; if (audH) killNodes(audH, true); try { audH = SND.demo(name, AC, CH.bus, AC.currentTime + 0.03); } catch (e) {} }
 function renderSettings() {
   if (!settingsBuilt) {
     settingsBuilt = true;
     const paceW = (host, key, label) => host.append(mmss(() => settings[key], v => { if (v >= 120 && v <= 1800) { settings[key] = v; saveSettings(); renderWorkouts(); return true; } return false; }, label));
     paceW($('paceRun'), 'runPace', 'Run pace'); paceW($('paceWalk'), 'walkPace', 'Walk pace');
-    [['tVoice', 'voice'], ['tBeep', 'beep'], ['tCd', 'cd'], ['tVib', 'vib']].forEach(([id, k]) => $(id).addEventListener('change', () => { settings[k] = $(id).checked; saveSettings(); }));
+    TOG.forEach(([id, k]) => $(id).addEventListener('change', () => { settings[k] = $(id).checked; saveSettings(); }));
+    $('tAlerts').addEventListener('change', () => {
+      const off = () => { settings.alerts = false; $('tAlerts').checked = false; saveSettings(); };
+      if (!$('tAlerts').checked) { off(); return; }
+      if (!('Notification' in window)) { off(); toast('Notifications are not available here'); return; }
+      try { Notification.requestPermission().then(p => { if (p === 'granted') { settings.alerts = true; saveSettings(); } else { off(); toast('Notifications are blocked for this app'); } }).catch(off); } catch (e) { off(); }
+    });
+    $('voiceSeg').querySelectorAll('button').forEach(b => b.addEventListener('click', () => { settings.voice = b.dataset.v; saveSettings(); renderSettings(); if (R) return; ensureAudio(); if (settings.voice !== 'off') speak(settings.voice === 'full' ? 'Run. One minute. Up next, walk.' : 'Run. One minute.'); }));
+    const vol = $('vol');
+    vol.addEventListener('input', () => { settings.volume = +vol.value; if (CH) CH.master.gain.value = settings.volume; saveSettings(); });
+    vol.addEventListener('change', () => audition('run'));
+    const lab = $('lab');
+    LAB.forEach(([k, name]) => lab.append(h('button', { type: 'button', class: 'labb', 'data-k': k, onclick: () => audition(k) }, [(() => { const g = h('span', { class: 'gl' }); g.innerHTML = glyph(k); return g; })(), h('span', { text: name })])));
     $('themeSeg').querySelectorAll('button').forEach(b => b.addEventListener('click', () => { settings.theme = b.dataset.v; saveSettings(); applyTheme(); renderSettings(); }));
     $('rowClear').addEventListener('click', () => ask('Clear all logged sessions?', 'Clear', 'Cancel', () => { hist = []; S.set('history', hist); toast('History cleared'); }));
     $('rowInstall').addEventListener('click', doInstall);
     $('ver').textContent = APP_VERSION;
   }
-  [['tVoice', 'voice'], ['tBeep', 'beep'], ['tCd', 'cd'], ['tVib', 'vib']].forEach(([id, k]) => { $(id).checked = !!settings[k]; });
+  TOG.forEach(([id, k]) => { $(id).checked = !!settings[k]; });
+  $('tAlerts').checked = !!settings.alerts && 'Notification' in window && Notification.permission === 'granted';
+  $('vol').value = settings.volume;
+  $('voiceSeg').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === settings.voice)));
   $('themeSeg').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === settings.theme)));
   renderInstall();
 }
@@ -821,52 +908,432 @@ try { matchMedia('(display-mode: standalone)').addEventListener('change', render
 $('instYes').addEventListener('click', doInstall);
 $('instNo').addEventListener('click', () => { S.set('installDismissedUntil', Date.now() + 14 * 864e5); renderInstall(); });
 
-/* ---------- audio / cues ---------- */
-let AC = null;
-function ensureAudio() { try { const C = window.AudioContext || window.webkitAudioContext; if (!C) return; if (!AC) AC = new C(); if (AC.state === 'suspended') AC.resume(); } catch (e) {} }
-function beep(freq, dur) { if (!settings.beep || !AC) return; try { const o = AC.createOscillator(), g = AC.createGain(), t = AC.currentTime; o.type = 'sine'; o.frequency.value = freq; g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.5, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + dur); o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t + dur + 0.02); } catch (e) {} }
-function vib(p) { if (!settings.vib) return; try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} }
-function say(t, flush) { if (!settings.voice) return; try { if (!('speechSynthesis' in window)) return; if (flush) speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = 'en-CA'; speechSynthesis.speak(u); } catch (e) {} }
-function words(sec) { const m = Math.floor(sec / 60), s = Math.round(sec % 60), p = []; if (m) p.push(m + (m === 1 ? ' minute' : ' minutes')); if (s) p.push(s + (s === 1 ? ' second' : ' seconds')); return p.join(' '); }
-const cueText = s => (s.act === 'Warm-up' ? 'Warm up' : s.act === 'Cool-down' ? 'Cool down' : s.act) + ' for ' + (s.kind === 'time' ? words(s.val) : s.val + ' metres');
+/* ---------- sonic identity: every sound is synthesized, all in D major pentatonic ---------- */
+const SND = (() => {
+  const SEMI = { C: 0, D: 2, E: 4, F: 5, 'F#': 6, G: 7, A: 9, B: 11 };
+  const note = n => { const m = /^([A-G]#?)(\d)$/.exec(n); return 440 * Math.pow(2, (12 * (+m[2] + 1) + SEMI[m[1]] - 69) / 12); };
+  const nbuf = new WeakMap();
+  const noise = ctx => { let b = nbuf.get(ctx); if (!b) { b = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate); const d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; nbuf.set(ctx, b); } return b; };
+  const env = (g, t, peak, atk, dec) => { g.gain.value = 0.0001; g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(peak, t + atk); g.gain.exponentialRampToValueAtTime(0.0001, t + atk + dec); };
+
+  /* voices: (ctx, dest, ..., t, opts) -> array of nodes, the first one is the voice's output gain */
+  function pluck(ctx, dest, f, t, o = {}) {
+    const bright = o.bright == null ? 0.8 : o.bright, decay = o.decay || 0.35, gain = o.gain == null ? 0.5 : o.gain;
+    const car = ctx.createOscillator(), mod = ctx.createOscillator(), mg = ctx.createGain(), lp = ctx.createBiquadFilter(), g = ctx.createGain();
+    car.type = 'sine'; mod.type = 'sine'; car.frequency.value = f; mod.frequency.value = f * 2;
+    mg.gain.setValueAtTime(bright * 6 * f * 2, t); mg.gain.exponentialRampToValueAtTime(0.01, t + 0.08);
+    mod.connect(mg); mg.connect(car.frequency);
+    lp.type = 'lowpass'; lp.frequency.value = 1400 + bright * 2600; lp.Q.value = 0.5;
+    env(g, t, gain, 0.002, decay);
+    car.connect(lp); lp.connect(g); g.connect(dest);
+    const end = t + decay + 0.06; car.start(t); mod.start(t); car.stop(end); mod.stop(end);
+    return [g, car, mod];
+  }
+  function bell(ctx, dest, f, t, o = {}) {
+    const decay = o.decay || 1.8, gain = o.gain == null ? 0.3 : o.gain;
+    const car = ctx.createOscillator(), mod = ctx.createOscillator(), mg = ctx.createGain(), lp = ctx.createBiquadFilter(), g = ctx.createGain();
+    car.type = 'sine'; mod.type = 'sine'; car.frequency.value = f; mod.frequency.value = f * 3.5;
+    mg.gain.setValueAtTime(3 * f * 3.5, t); mg.gain.exponentialRampToValueAtTime(0.01, t + decay * 0.7);
+    mod.connect(mg); mg.connect(car.frequency);
+    lp.type = 'lowpass'; lp.frequency.value = 4200; lp.Q.value = 0.4;
+    env(g, t, gain, 0.005, decay);
+    car.connect(lp); lp.connect(g); g.connect(dest);
+    const end = t + decay + 0.06; car.start(t); mod.start(t); car.stop(end); mod.stop(end);
+    return [g, car, mod];
+  }
+  /* cutoff sweeps from o.from to o.to over dur; o.glide moves the pitch by that many semitones */
+  function pad(ctx, dest, f, t, dur, o = {}) {
+    const from = o.from || 800, to = o.to || 800, gain = o.gain == null ? 0.25 : o.gain, atk = o.atk == null ? dur * 0.3 : o.atk;
+    const a = ctx.createOscillator(), b = ctx.createOscillator(), lp = ctx.createBiquadFilter(), g = ctx.createGain();
+    a.type = 'triangle'; b.type = 'triangle'; a.detune.value = -6; b.detune.value = 6;
+    [a, b].forEach(x => { x.frequency.setValueAtTime(f, t); if (o.glide) x.frequency.exponentialRampToValueAtTime(f * Math.pow(2, o.glide / 12), t + dur * 0.9); });
+    lp.type = 'lowpass'; lp.Q.value = 0.8; lp.frequency.setValueAtTime(from, t); lp.frequency.exponentialRampToValueAtTime(to, t + dur);
+    g.gain.value = 0.0001; g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(gain, t + atk); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    a.connect(lp); b.connect(lp); lp.connect(g); g.connect(dest);
+    a.start(t); b.start(t); a.stop(t + dur + 0.05); b.stop(t + dur + 0.05);
+    return [g, a, b];
+  }
+  function breath(ctx, dest, t, dur, o = {}) {
+    const rising = !!o.rising, gain = o.gain == null ? 0.2 : o.gain, lo = o.lo || 700, hi = o.hi || 3200;
+    const src = ctx.createBufferSource(), bp = ctx.createBiquadFilter(), g = ctx.createGain();
+    src.buffer = noise(ctx); src.loop = true;
+    bp.type = 'bandpass'; bp.Q.value = 1.3;
+    bp.frequency.setValueAtTime(rising ? lo : hi, t); bp.frequency.exponentialRampToValueAtTime(rising ? hi : lo, t + dur);
+    g.gain.value = 0.0001; g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(gain, t + dur * (rising ? 0.7 : 0.25)); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    src.connect(bp); bp.connect(g); g.connect(dest);
+    src.start(t, Math.random() * 1.5); src.stop(t + dur + 0.05);
+    return [g, src];
+  }
+  function tick(ctx, dest, f, t, gain) {
+    gain = gain == null ? 0.16 : gain;
+    const o1 = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain(), g2 = ctx.createGain(), n = ctx.createBufferSource(), hp = ctx.createBiquadFilter(), gn = ctx.createGain();
+    o1.type = 'sine'; o2.type = 'sine'; o1.frequency.value = f; o2.frequency.value = f * 2.76;
+    env(g, t, gain, 0.001, 0.014); g2.gain.value = 0.35; o1.connect(g); o2.connect(g2); g2.connect(g); g.connect(dest);
+    hp.type = 'highpass'; hp.frequency.value = 2000; env(gn, t, gain * 0.5, 0.0005, 0.004);
+    n.buffer = noise(ctx); n.connect(hp); hp.connect(gn); gn.connect(g);
+    o1.start(t); o2.start(t); o1.stop(t + 0.03); o2.stop(t + 0.03); n.start(t, Math.random()); n.stop(t + 0.01);
+    return [g, o1, o2, n];
+  }
+  const dbl = (ctx, dest, f, t, gain) => tick(ctx, dest, f, t, gain).concat(tick(ctx, dest, f, t + 0.11, gain));
+  const grp = (ctx, dest, v) => { const g = ctx.createGain(); g.gain.value = v; g.connect(dest); return g; };
+
+  /* how loud each movement tag sits before the shared bus (tuned against the compressor) */
+  const TRIM = { run: 1, sprint: 1, jog: 1, walk: 1.12, rest: 1.4, warm: 1, cool: 1, finish: 1 };
+  const TAGS = {
+    run(c, d, t) { const g = grp(c, d, TRIM.run), n = [g];
+      [['D4', 0], ['F#4', 0.11], ['A4', 0.22]].forEach(([k, dt]) => n.push(...pluck(c, g, note(k), t + dt, { bright: 0.8, decay: 0.32 })));
+      n.push(...bell(c, g, note('D5'), t + 0.22, { decay: 0.9, gain: 0.16 })); return n; },
+    sprint(c, d, t) { const g = grp(c, d, TRIM.sprint), n = [g];
+      [['A4', 0], ['B4', 0.08], ['D5', 0.16], ['F#5', 0.24]].forEach(([k, dt]) => n.push(...pluck(c, g, note(k), t + dt, { bright: 1, decay: 0.28, gain: 0.42 })));
+      n.push(...breath(c, g, t, 0.3, { rising: true, gain: 0.14 })); return n; },
+    jog(c, d, t) { const g = grp(c, d, TRIM.jog), n = [g];
+      [['D4', 0], ['A4', 0.16]].forEach(([k, dt]) => n.push(...pluck(c, g, note(k), t + dt, { bright: 0.5, decay: 0.4 }))); return n; },
+    walk(c, d, t) { const g = grp(c, d, TRIM.walk), n = [g];
+      n.push(...bell(c, g, note('A4'), t, { decay: 1.6, gain: 0.34 }), ...bell(c, g, note('D4'), t + 0.28, { decay: 2, gain: 0.34 })); return n; },
+    rest(c, d, t) { const g = grp(c, d, TRIM.rest), n = [g];
+      n.push(...breath(c, g, t, 1.4, { rising: false, gain: 0.2, lo: 600, hi: 2400 }), ...pad(c, g, note('D3'), t, 2, { from: 1100, to: 250, gain: 0.3 })); return n; },
+    warm(c, d, t) { const g = grp(c, d, TRIM.warm), n = [g];
+      n.push(...pad(c, g, note('D3'), t, 2.2, { from: 300, to: 2500, gain: 0.26, atk: 1.2 }), ...pad(c, g, note('A3'), t, 2.2, { from: 300, to: 2500, gain: 0.22, atk: 1.2 }),
+        ...breath(c, g, t, 2.1, { rising: true, gain: 0.12 }), ...pluck(c, g, note('A4'), t + 2, { bright: 0.7, decay: 0.45 })); return n; },
+    cool(c, d, t) { const g = grp(c, d, TRIM.cool), n = [g];
+      n.push(...pad(c, g, note('D4'), t, 2.5, { from: 2500, to: 250, gain: 0.26, atk: 0.12, glide: -2 }), ...pad(c, g, note('A3'), t, 2.5, { from: 2500, to: 250, gain: 0.22, atk: 0.12, glide: -2 }),
+        ...bell(c, g, note('D3'), t + 2.2, { decay: 1.4, gain: 0.3 })); return n; },
+    finish(c, d, t) { const g = grp(c, d, TRIM.finish), n = [g];
+      [['D4', 0], ['F#4', 0.12], ['A4', 0.24], ['D5', 0.36]].forEach(([k, dt]) => n.push(...pluck(c, g, note(k), t + dt, { bright: 0.8, decay: 0.34 })));
+      ['D5', 'F#5', 'A5'].forEach(k => n.push(...bell(c, g, note(k), t + 0.5, { decay: 2.2, gain: 0.18 })));
+      n.push(...breath(c, g, t + 0.5, 1.4, { rising: false, gain: 0.08 })); return n; }
+  };
+  /* "last one": the tag's final note, one octave up, quietly */
+  const LASTN = {
+    run: (c, d, t) => pluck(c, d, note('A5'), t, { bright: 0.6, decay: 0.4, gain: 0.2 }),
+    sprint: (c, d, t) => pluck(c, d, note('F#6'), t, { bright: 0.6, decay: 0.3, gain: 0.14 }),
+    jog: (c, d, t) => pluck(c, d, note('A5'), t, { bright: 0.4, decay: 0.4, gain: 0.2 }),
+    walk: (c, d, t) => bell(c, d, note('D5'), t, { decay: 1.6, gain: 0.16 }),
+    rest: (c, d, t) => pad(c, d, note('D4'), t, 1.4, { from: 900, to: 300, gain: 0.1 }),
+    warm: (c, d, t) => pluck(c, d, note('A5'), t, { bright: 0.5, decay: 0.4, gain: 0.18 }),
+    cool: (c, d, t) => bell(c, d, note('D4'), t, { decay: 1.6, gain: 0.16 }),
+    finish: (c, d, t) => bell(c, d, note('D6'), t, { decay: 1.6, gain: 0.1 })
+  };
+  const CD = { up: ['D5', 'E5', 'F#5'].map(note), down: ['A5', 'F#5', 'E5'].map(note), level: ['E5', 'E5', 'E5'].map(note) };
+  const pauseS = (c, d, t) => pluck(c, d, note('A4'), t, { bright: 0.4, decay: 0.25, gain: 0.14 }).concat(pluck(c, d, note('D4'), t + 0.12, { bright: 0.4, decay: 0.3, gain: 0.14 }));
+  const resumeS = (c, d, t) => pluck(c, d, note('D4'), t, { bright: 0.4, decay: 0.25, gain: 0.14 }).concat(pluck(c, d, note('A4'), t + 0.12, { bright: 0.4, decay: 0.3, gain: 0.14 }));
+
+  /* shared chain: bus -> (dry + reverb 18%) -> compressor -> master volume -> speakers */
+  function chain(ctx, vol) {
+    const bus = ctx.createGain(), conv = ctx.createConvolver(), wet = ctx.createGain(), comp = ctx.createDynamicsCompressor(), master = ctx.createGain();
+    const sr = ctx.sampleRate, len = Math.floor(sr * 1.2), ir = ctx.createBuffer(2, len, sr), a = 1 - Math.exp(-2 * Math.PI * 6000 / sr);
+    let seed = 20251; const rnd = () => { seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+    for (let ch = 0; ch < 2; ch++) { const d = ir.getChannelData(ch); let y = 0, e = 0; for (let i = 0; i < len; i++) { y += a * ((rnd() * 2 - 1) * Math.exp(-i / sr * 5.76) - y); d[i] = y; e += y * y; } const k = 1 / Math.sqrt(e); for (let i = 0; i < len; i++) d[i] *= k; }
+    conv.normalize = false; conv.buffer = ir; wet.gain.value = 0.18;
+    comp.threshold.value = -18; comp.ratio.value = 4; comp.attack.value = 0.003; comp.release.value = 0.12;
+    master.gain.value = vol == null ? 0.9 : vol;
+    bus.connect(comp); bus.connect(conv); conv.connect(wet); wet.connect(comp); comp.connect(master); master.connect(ctx.destination);
+    return { bus, master, comp };
+  }
+  /* auditions, also used by the sound lab */
+  function demo(name, c, d, t) {
+    if (TAGS[name]) return TAGS[name](c, d, t);
+    if (name === 'cdUp' || name === 'cdDown') return CD[name === 'cdUp' ? 'up' : 'down'].reduce((n, f, i) => n.concat(tick(c, d, f, t + i * 0.5)), []);
+    if (name === 'half') return tick(c, d, note('D5'), t, 0.14).concat(tick(c, d, note('A4'), t + 0.45, 0.14));
+    if (name === 'lastOne') return TAGS.run(c, d, t).concat(LASTN.run(c, d, t + 0.4));
+    return [];
+  }
+  return { note, tick, dbl, tag: (n, c, d, t) => TAGS[n](c, d, t), last: (n, c, d, t) => LASTN[n](c, d, t), CD, pauseS, resumeS, chain, demo, TRIM, names: Object.keys(TAGS) };
+})();
+
+/* the contour of each tag as dots: [height -1..1, size, seconds in]. Drawn on the run screen and in the sound lab. */
+const SHAPES = {
+  run: [[-0.7, 9, 0], [-0.25, 9, 0.11], [0.2, 9, 0.22], [0.65, 15, 0.3]],
+  sprint: [[-0.9, 8, 0], [-0.3, 8, 0.08], [0.3, 8, 0.16], [0.9, 8, 0.24]],
+  jog: [[-0.3, 10, 0], [0.3, 10, 0.16]],
+  walk: [[0.5, 17, 0], [-0.5, 17, 0.28]],
+  rest: [[0, 5, 0], [0, 12, 0.3], [0, 16, 0.6], [0, 8, 0.9]],
+  warm: [[-0.8, 6, 0], [-0.3, 9, 0.4], [0.2, 12, 0.8], [0.7, 16, 1.2]],
+  cool: [[0.7, 16, 0], [0.2, 13, 0.5], [-0.3, 9, 1], [-0.8, 6, 1.5]],
+  finish: [[-0.7, 9, 0], [-0.2, 9, 0.12], [0.3, 9, 0.24], [0.8, 16, 0.5]],
+  cdUp: [[-0.5, 8, 0], [0, 8, 1], [0.5, 8, 2]],
+  cdDown: [[0.5, 8, 0], [0, 8, 1], [-0.5, 8, 2]],
+  half: [[0, 8, 0], [0, 14, 0.45]],
+  lastOne: [[-0.7, 9, 0], [-0.25, 9, 0.11], [0.2, 9, 0.22], [0.9, 6, 0.62]]
+};
+function glyph(name) {
+  const dots = SHAPES[name], n = dots.length, w = 72;
+  return '<svg viewBox="0 0 ' + w + ' 30" width="' + w + '" height="30" aria-hidden="true" fill="currentColor">' + dots.map((d, i) => '<circle cx="' + (n === 1 ? w / 2 : 10 + i * (w - 20) / (n - 1)).toFixed(1) + '" cy="' + (15 - d[0] * 10).toFixed(1) + '" r="' + (d[1] / 2).toFixed(1) + '"/>').join('') + '</svg>';
+}
+const HAP = { run: [60, 60, 60, 60, 120], sprint: [40, 40, 40, 40, 40, 40, 160], jog: [80, 100, 80], walk: [250, 150, 250], rest: [600], warm: [100, 80, 160, 80, 240], cool: [240, 80, 160, 80, 100], finish: [80, 60, 80, 60, 400] };
+const HARD = { run: 1, sprint: 1, jog: 1 };
+
+/* ---------- audio runtime: one AudioContext, cues scheduled on its clock ---------- */
+let AC = null, CH = null;
+function ensureAudio() {
+  try {
+    const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
+    if (!AC) { AC = new C({ latencyHint: 'interactive' }); CH = SND.chain(AC, settings.volume); AC.onstatechange = () => { if (R && AC.state !== 'running') AC.resume().catch(() => {}); }; }
+    if (AC.state !== 'running') AC.resume().catch(() => {});
+  } catch (e) {}
+}
+const killNodes = (nodes, fade) => nodes.forEach((n, i) => {
+  try { if (fade && i === 0 && n.gain && AC) { n.gain.cancelScheduledValues(AC.currentTime); n.gain.setValueAtTime(n.gain.value, AC.currentTime); n.gain.linearRampToValueAtTime(0, AC.currentTime + 0.05); }
+    else { if (typeof n.stop === 'function') n.stop(); n.disconnect(); } } catch (e) {} });
+function playNow(fn, delay) { if (!AC || !CH || !settings.sound) return null; try { return fn(AC.currentTime + 0.01 + (delay || 0)); } catch (e) { return null; } }
+
+/* scheduled cues: id -> { at (wall ms), kind, h (nodes), done } */
+const SCH = new Map();
+function cancelEntry(e) { if (e.h) killNodes(e.h, false); SCH.delete(e.id); }
+function cancelPending(except) { const now = Date.now(); SCH.forEach(e => { if (e.done || (except && except.indexOf(e.id) >= 0)) return; if (e.at > now + 20) cancelEntry(e); }); }
+function fadeRinging() { const now = Date.now(); SCH.forEach(e => { if (e.kind === 'audio' && e.h && e.at <= now && now - e.at < 3000) killNodes(e.h, true); }); }
+function schedule(c) {
+  const e = { id: c.id, at: c.at, kind: c.kind, pin: !!c.pin, done: false, h: null, text: c.text }; SCH.set(c.id, e);
+  if (c.kind === 'audio') { if (!AC || !CH) { e.done = true; return e; } try { e.h = c.play(AC.currentTime + Math.max(0.005, (c.at - Date.now()) / 1000)); } catch (err) { e.done = true; } }
+  return e;
+}
+const HOR = 6000;
+const isLastOne = k => { const s = R.seq[k]; return !!(s.rep && s.rep.n > 1 && s.rep.i === s.rep.n && s.rj === 0); };
+function stepCues(k, vis, at, pin) {
+  const s = R.seq[k], key = AK[s.act], id = k + '.' + vis + ':', out = [], last = isLastOne(k);
+  if (settings.sound) out.push({ id: id + 'tag', at, pin, kind: 'audio', play: w => { const n = SND.tag(key, AC, CH.bus, w); return last ? n.concat(SND.last(key, AC, CH.bus, w + 0.4)) : n; } });
+  const vt = voiceText(k); if (vt) out.push({ id: id + 'say', at: at + 900, pin, kind: 'speech', text: vt });
+  return out;
+}
+/* where a step ends on the wall clock, or null when it cannot be known yet */
+function endWall(k, S, now) {
+  const s = R.seq[k];
+  if (s.kind === 'time') return S + s.val * 1000;
+  if (R.gps !== 'ok') return S + planSec(s) * 1000;
+  if (!R.estOn) return null;
+  const v = R.estV || 1000 / pace(s.act);
+  return k === R.idx ? now + Math.max(0, s.val - R.stepGps) / v * 1000 : S + s.val / v * 1000;
+}
+function desired(now) {
+  const out = [], seq = R.seq; let S = now - (R.stepMs + (now - R.last)), k = R.idx, end = true;
+  for (; k < seq.length; k++) {
+    if (S > now + HOR + 500) { end = false; break; }
+    const s = seq[k], key = AK[s.act], vis = (R.vis[k] || 0) + (k > R.idx ? 1 : 0), id = k + '.' + vis + ':', E = endWall(k, S, now);
+    if (k > R.idx) stepCues(k, vis, S).forEach(c => out.push(c));
+    if (s.kind === 'time' && E != null) {
+      const hard = !!HARD[key], nx = seq[k + 1], nh = nx ? !!HARD[AK[nx.act]] : false;
+      if (s.val >= 60) {
+        const at = S + s.val * 500;
+        if (settings.sound) out.push({ id: id + 'half', at, kind: 'audio', play: w => SND.tick(AC, CH.bus, SND.note(hard ? 'D5' : 'A4'), w, 0.14) });
+        if (settings.voice === 'full') out.push({ id: id + 'halfsay', at, kind: 'speech', text: 'Halfway.' });
+      }
+      if (settings.sound && (key === 'run' || key === 'sprint') && s.val > 45) out.push({ id: id + 'near', at: E - 10000, kind: 'audio', play: w => SND.dbl(AC, CH.bus, SND.note('D5'), w, 0.12) });
+      if (settings.sound && settings.cd && s.val >= 8) {
+        const set = hard === nh && nx ? SND.CD.level : (!hard && nh ? SND.CD.up : SND.CD.down);
+        for (let i = 0; i < 3; i++) out.push({ id: id + 'cd' + i, at: E - (3 - i) * 1000, kind: 'audio', play: w => SND.tick(AC, CH.bus, set[i], w, 0.15) });
+      }
+    }
+    if (E == null) { end = false; break; }
+    S = E;
+  }
+  if (end && k >= seq.length && settings.sound) out.push({ id: 'fin', at: S, kind: 'audio', play: w => SND.tag('finish', AC, CH.bus, w) });
+  return out;
+}
+/* the lookahead scheduler: reconcile what should sound in the next few seconds with what is already queued */
+function pump() {
+  const now = Date.now();
+  SCH.forEach(e => { if (e.kind === 'speech' && !e.done && e.at <= now) { e.done = true; if (now - e.at < 2500) speak(e.text); } });
+  if (!R || !AC || !CH || R.pre || R.paused || R.hold) return;
+  const want = desired(now), wm = new Map(); want.forEach(c => wm.set(c.id, c));
+  SCH.forEach(e => {
+    if (e.done || e.pin) return;
+    if (e.kind === 'audio' && e.at <= now + 20) { e.done = true; return; }
+    const c = wm.get(e.id); if (!c || Math.abs(c.at - e.at) > 120) cancelEntry(e);
+  });
+  want.forEach(c => {
+    if (SCH.has(c.id) || c.at > now + HOR) return;
+    if (c.kind === 'audio' && c.at < now - 300 && !/:tag$/.test(c.id)) { SCH.set(c.id, { id: c.id, done: true, at: c.at }); return; }
+    if (/:tag$/.test(c.id) && c.at < now - 2000) { SCH.set(c.id, { id: c.id, done: true, at: c.at }); return; }
+    schedule(c);
+  });
+}
+
+/* ---------- speech (the optional voice layer) ---------- */
+const ONES = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+const TENS = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+function numWords(n) {
+  n = Math.floor(n); if (n < 20) return ONES[n]; if (n < 100) return TENS[Math.floor(n / 10)] + (n % 10 ? ' ' + ONES[n % 10] : '');
+  if (n < 1000) return ONES[Math.floor(n / 100)] + ' hundred' + (n % 100 ? ' ' + numWords(n % 100) : '');
+  return numWords(Math.floor(n / 1000)) + ' thousand' + (n % 1000 ? ' ' + numWords(n % 1000) : '');
+}
+function timeWords(sec) {
+  if (sec < 120 && sec % 60 !== 0) return numWords(sec) + ' seconds';
+  const m = Math.floor(sec / 60), s = sec % 60, p = [];
+  if (m) p.push(numWords(m) + (m === 1 ? ' minute' : ' minutes')); if (s) p.push(numWords(s) + (s === 1 ? ' second' : ' seconds'));
+  return p.join(' ');
+}
+function amountWords(s) {
+  if (s.kind === 'time') return timeWords(s.val);
+  if (s.val % 1000 === 0) { const k = s.val / 1000; return numWords(k) + (k === 1 ? ' kilometre' : ' kilometres'); }
+  return numWords(s.val) + ' metres';
+}
+const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
+const actWord = a => a === 'Warm-up' ? 'Warm up' : a === 'Cool-down' ? 'Cool down' : a;
+function voiceText(k) {
+  if (settings.voice === 'off') return '';
+  const s = R.seq[k], nx = R.seq[k + 1], last = isLastOne(k), base = actWord(s.act) + '. ' + cap(amountWords(s)) + '.';
+  if (settings.voice === 'short') return last ? 'Last one.' : base;
+  return (last ? 'Last one. ' : '') + base + (nx ? ' Up next, ' + actWord(nx.act).toLowerCase() + '.' : ' Last step.');
+}
+function speak(text) {
+  if (!text || settings.voice === 'off') return;
+  try {
+    if (!('speechSynthesis' in window)) return;
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text), vs = speechSynthesis.getVoices() || [];
+    const v = vs.find(x => x.lang === 'en-CA' || x.lang === 'en_CA') || vs.find(x => /^en/i.test(x.lang));
+    if (v) { u.voice = v; u.lang = v.lang; } else u.lang = 'en-CA';
+    u.rate = 1.05; speechSynthesis.speak(u);
+  } catch (e) {}
+}
+function vib(p) { if (!settings.vib || document.hidden) return; try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} }
+
+/* ---------- screen-off mode: a quiet audio bed keeps the page alive ---------- */
+let BED = null, bedURL = null;
+function makeBedWav() {
+  const sr = 8000, n = sr * 10, d = new Float32Array(n); let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0, ss = 0;
+  for (let i = 0; i < n; i++) { const w = Math.random() * 2 - 1;
+    b0 = 0.99886 * b0 + w * 0.0555179; b1 = 0.99332 * b1 + w * 0.0750759; b2 = 0.969 * b2 + w * 0.153852; b3 = 0.8665 * b3 + w * 0.3104856; b4 = 0.55 * b4 + w * 0.5329522; b5 = -0.7616 * b5 - w * 0.016898;
+    const p = b0 + b1 + b2 + b3 + b4 + b5 + b6 + w * 0.5362; b6 = w * 0.115926; d[i] = p; ss += p * p; }
+  const gain = Math.pow(10, -50 / 20) / Math.sqrt(ss / n), fade = Math.round(sr * 0.05);
+  const buf = new ArrayBuffer(44 + n * 2), v = new DataView(buf), str = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+  str(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); str(8, 'WAVE'); str(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true); v.setUint32(24, sr, true); v.setUint32(28, sr * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); str(36, 'data'); v.setUint32(40, n * 2, true);
+  for (let i = 0; i < n; i++) { let x = d[i] * gain; if (i < fade) x *= i / fade; else if (i >= n - fade) x *= (n - 1 - i) / fade; v.setInt16(44 + i * 2, Math.max(-32768, Math.min(32767, Math.round(x * 32767))), true); }
+  return buf;
+}
+function bedStart() {
+  if (!settings.screenOff) return;
+  try {
+    if (!BED) { if (!bedURL) bedURL = URL.createObjectURL(new Blob([makeBedWav()], { type: 'audio/wav' })); BED = new Audio(bedURL); BED.loop = true; BED.preload = 'auto'; BED.volume = 1; BED.muted = false;
+      BED.addEventListener('pause', () => { if (R && !R.paused && !R.pre && document.hidden) setTimeout(() => { if (R && !R.paused && BED && BED.paused) BED.play().catch(() => {}); }, 300); }); }
+    const p = BED.play(); if (p && p.catch) p.catch(() => { document.addEventListener('pointerdown', () => { if (R && !R.paused) bedStart(); }, { once: true }); });
+  } catch (e) {}
+}
+const bedPause = () => { try { if (BED) BED.pause(); } catch (e) {} };
+const bedStop = () => { try { if (BED) { BED.pause(); BED.currentTime = 0; } } catch (e) {} };
+function kick() { if (AC && AC.state !== 'running') AC.resume().catch(() => {}); if (R && !R.paused && settings.screenOff && BED && BED.paused) bedStart(); }
+
+/* ---------- media session: the lock-screen card and its buttons ---------- */
+const MS = 'mediaSession' in navigator ? navigator.mediaSession : null;
+let msKey = '';
+const absURL = u => { try { return new URL(u, location.href).href; } catch (e) { return u; } };
+function msInit() {
+  if (!MS) return;
+  const on = (a, f) => { try { MS.setActionHandler(a, () => { kick(); if (R) f(); }); } catch (e) {} };
+  on('play', () => { if (R.paused) togglePause(); }); on('pause', () => { if (!R.paused) togglePause(); });
+  on('nexttrack', nextStep); on('previoustrack', prevStep);
+  on('stop', () => { if (Date.now() - R.t0 < 2000) return; finish(true); });
+}
+function msState(s) { if (MS) { try { MS.playbackState = s; } catch (e) {} } msKey = ''; }
+function msUpdate(s, left, elapsed) {
+  if (!MS || !settings.screenOff || !R) return;
+  const title = s.act.toUpperCase() + '  ' + left, artist = (s.rep ? 'Rep ' + s.rep.i + ' of ' + s.rep.n : 'Step ' + (R.idx + 1) + ' of ' + R.seq.length) + ' · ' + R.w.name, key = title + '|' + artist + '|' + R.paused;
+  if (key === msKey) return; msKey = key;
+  try {
+    MS.metadata = new MediaMetadata({ title, artist, album: 'Intervals', artwork: [{ src: absURL('icon-192.png'), sizes: '192x192', type: 'image/png' }, { src: absURL('icon-512.png'), sizes: '512x512', type: 'image/png' }] });
+    if (s.kind === 'time') MS.setPositionState({ duration: s.val, position: Math.max(0, Math.min(s.val, elapsed)), playbackRate: 1 }); else MS.setPositionState();
+  } catch (e) {}
+}
+function msClear() { if (!MS) return; try { MS.metadata = null; MS.playbackState = 'none'; MS.setPositionState(); } catch (e) {} msKey = ''; }
+
+/* ---------- lock-screen notifications (optional, they also reach a paired watch) ---------- */
+let swReg = null;
+function notifyStep(s, nx) {
+  if (!settings.alerts || !document.hidden || !swReg || !('Notification' in window) || Notification.permission !== 'granted') return;
+  try { swReg.showNotification(s.act.toUpperCase() + ' · ' + (s.kind === 'time' ? fmt(s.val) : s.val + ' m'), { body: nx ? 'Up next: ' + stepTxt(nx) : 'Last step', tag: 'intervals-step', renotify: true, silent: false, icon: 'icon-192.png', badge: 'icon-192.png', vibrate: HAP[AK[s.act]], requireInteraction: false }).catch(() => {}); } catch (e) {}
+}
+function closeNotifs() { try { if (swReg) swReg.getNotifications({ tag: 'intervals-step' }).then(l => l.forEach(n => n.close())).catch(() => {}); } catch (e) {} }
 
 let wl = null;
-function getWL() { try { if (R && navigator.wakeLock && navigator.wakeLock.request) navigator.wakeLock.request('screen').then(l => { wl = l; l.addEventListener('release', () => { wl = null; }); }).catch(() => {}); } catch (e) {} }
+function getWL() { try { if (R && !wl && navigator.wakeLock && navigator.wakeLock.request) navigator.wakeLock.request('screen').then(l => { wl = l; l.addEventListener('release', () => { wl = null; }); }).catch(() => {}); } catch (e) {} }
 function relWL() { try { if (wl) wl.release(); } catch (e) {} wl = null; }
 
+/* ---------- GPS: warmed up before Start so a fix is likely by GO ---------- */
+const G = { watch: null, pos: null, acc: null, goodAt: 0, denied: false, na: false, warmT: null };
+function onGeoErr(err) {
+  if (err && err.code === 1) { G.denied = true; if (R && R.hasDist) R.gps = 'denied'; }
+  else if (R && R.gps !== 'ok' && R.gps !== 'denied') R.gps = 'fail';
+}
+function startWatch() {
+  if (G.watch != null) return;
+  try { if (!navigator.geolocation) { G.na = true; return; } G.watch = navigator.geolocation.watchPosition(onFix, onGeoErr, { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }); } catch (e) { G.na = true; }
+}
+function stopWatch() { clearTimeout(G.warmT); if (G.watch != null) { try { navigator.geolocation.clearWatch(G.watch); } catch (e) {} G.watch = null; } }
+const hasDistSteps = w => flatten(w.items).some(s => s.kind === 'dist');
+function warmGps() { if (R || !hasDistSteps(cur())) return; startWatch(); clearTimeout(G.warmT); G.warmT = setTimeout(() => { if (!R) stopWatch(); }, 90000); }
+
+/* ---------- pocket mode: pure black, keeps the screen on so GPS and cues keep working ---------- */
+let pocketOn = false, pkDimT = null;
+function undimPocket() { $('pocket').classList.remove('dim'); clearTimeout(pkDimT); pkDimT = setTimeout(() => $('pocket').classList.add('dim'), 10000); }
+function enterPocket() { pocketOn = true; $('pocket').hidden = false; undimPocket(); getWL(); updatePocket(); }
+function exitPocket() { pocketOn = false; $('pocket').hidden = true; clearTimeout(pkDimT); }
+function updatePocket(act, time) {
+  if (!pocketOn) return;
+  if (act != null) { $('pkAct').textContent = act; $('pkTime').textContent = time; }
+  $('pkGps').className = 'pk-gps ' + (R && R.hasDist ? (R.gps === 'ok' ? 'live' : 'off') : 'none');
+}
+(() => {
+  const btn = $('pkHold'), ring = btn.querySelector('.ring'), C = 125.66; let t0 = 0, raf = 0;
+  const stop = () => { cancelAnimationFrame(raf); t0 = 0; ring.style.strokeDashoffset = C; };
+  const step = () => { if (!t0) return; const p = Math.min(1, (performance.now() - t0) / 1200); ring.style.strokeDashoffset = String(C * (1 - p)); if (p >= 1) { stop(); exitPocket(); return; } raf = requestAnimationFrame(step); };
+  btn.addEventListener('pointerdown', e => { e.stopPropagation(); undimPocket(); if (t0) return; t0 = performance.now(); raf = requestAnimationFrame(step); });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => btn.addEventListener(ev, stop));
+  btn.addEventListener('contextmenu', e => e.preventDefault());
+  $('pocket').addEventListener('pointerdown', undimPocket);
+  $('cPocket').addEventListener('click', enterPocket);
+})();
+
 /* ---------- run engine (Date.now based, so a throttled timer never loses time) ---------- */
-let R = null, timer = null, watchId = null, wipeT = null;
+let R = null, timer = null, pumpT = null, wipeT = null;
 const hav = (a, b, c, d) => { const r = Math.PI / 180, x = Math.sin((c - a) * r / 2), y = Math.sin((d - b) * r / 2), q = x * x + Math.cos(a * r) * Math.cos(c * r) * y * y; return 12742000 * Math.asin(Math.sqrt(q)); };
 function popEl(el) { if (reduced()) return; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
-function startRun() {
+/* Start: distance workouts offer pocket mode first, so the screen stays on and GPS keeps tracking */
+function requestStart() {
+  const w = cur(); if (!flatten(w.items).length) return;
+  ensureAudio(); bedStart();
+  if (hasDistSteps(w)) { warmGps(); if (!settings.distPocket) { openSheet('sChoice'); return; } return startRun({ pocket: true }); }
+  startRun({});
+}
+function startRun(opts) {
+  opts = opts || {};
   const w = cur(), seq = flatten(w.items); if (!seq.length) return;
-  S.set('last', w.id); ensureAudio();
+  S.set('last', w.id); ensureAudio(); SCH.clear();
   let plan = 0; seq.forEach(s => { plan += planSec(s); });
-  R = { w, seq, idx: 0, stepMs: 0, el: 0, paused: false, hold: false, last: Date.now(), est: 0, gpsTot: 0, stepGps: 0, gps: 'off', gpsT0: Date.now(), fix: null, done: 0, half: false, lb: null, carry: 0, plan, hasDist: seq.some(s => s.kind === 'dist'), ri: -1, rk: null,
-    pre: { end: Date.now() + 3000, n: 4, go: 0 }, cum: [] };
+  const t0 = Date.now();
+  R = { w, seq, idx: 0, stepMs: 0, el: 0, paused: false, hold: false, last: t0, est: 0, gpsTot: 0, stepGps: 0, gps: 'off', gpsT0: t0, fix: null, fixAt: 0, spd: null, estOn: false, estV: 0, estHid: false, done: 0, lb: null, carry: 0, plan, hasDist: seq.some(s => s.kind === 'dist'), ri: -1, rk: null, vis: [], d100: 0, d50: false, t0,
+    pre: { end: t0 + 3000, n: 4, go: 0 }, cum: [] };
   let c = 0; seq.forEach(s => { R.cum.push(c); c += planSec(s); }); R.cumTot = c || 1;
-  if (R.hasDist) { R.gps = 'wait';
-    try { if (navigator.geolocation) watchId = navigator.geolocation.watchPosition(onFix, () => { if (R && R.gps !== 'ok') R.gps = 'fail'; }, { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }); else R.gps = 'fail'; } catch (e) { R.gps = 'fail'; } }
-  getWL();
+  if (R.hasDist) {
+    R.gps = G.denied ? 'denied' : G.na ? 'fail' : 'wait'; startWatch();
+    if (G.pos && t0 - G.goodAt < 10000 && !G.denied) { R.fix = { lat: G.pos.lat, lon: G.pos.lon, t: G.pos.t }; R.fixAt = t0; R.gps = 'ok'; }
+  }
+  getWL(); bedStart(); msInit(); msState('playing');
+  /* the 3, 2, 1 and the first tag, on the audio clock */
+  if (settings.sound) [3, 2, 1].forEach(i => schedule({ id: 'pre' + i, at: R.pre.end - i * 1000, kind: 'audio', pin: true, play: x => SND.tick(AC, CH.bus, SND.note('E5'), x, 0.16) }));
+  stepCues(0, 1, R.pre.end, true).forEach(schedule);
   $('rName').textContent = w.name; $('pName').textContent = w.name;
-  /* story bars and the strip are built once per run */
   const bars = $('rBars'); bars.textContent = ''; seq.forEach(() => bars.append(h('i', {}, [h('b')])));
   const sw = $('rStrip'); sw.querySelectorAll('.strip').forEach(x => x.remove()); sw.prepend(strip(seq, true));
-  hideSheet('sDetail'); hideSheet('sBuild');
+  hideSheet('sDetail'); hideSheet('sBuild'); hideSheet('sChoice');
   $('run').className = 'a-' + AK[seq[0].act]; $('run').setAttribute('data-act', AK[seq[0].act]);
-  $('rPause').hidden = true; $('rWipe').classList.remove('go');
+  $('rPause').hidden = true; $('rWipe').classList.remove('go'); $('gpsCard').hidden = true;
   $('runFin').hidden = true; $('runLive').hidden = true; $('runPre').hidden = false; $('pNum').className = ''; $('pNum').textContent = '3';
   $('run').hidden = false;
   pushLayer('run', () => { $('run').hidden = true; });
-  timer = setInterval(tick, 100);
+  if (opts.pocket) enterPocket(); else exitPocket();
+  timer = setInterval(tick, 100); pumpT = setInterval(pump, 250);
   tick();
 }
 function onFix(p) {
-  if (!R) return; const c = p.coords; if (c.accuracy > 30) return;
+  const c = p.coords, now = Date.now(); G.acc = c.accuracy; G.denied = false;
+  if (c.accuracy > 30) return;
+  G.goodAt = now; G.pos = { lat: c.latitude, lon: c.longitude, t: p.timestamp };
+  if (!R) return; R.fixAt = now;
   const f = R.fix;
   if (!f) { R.fix = { lat: c.latitude, lon: c.longitude, t: p.timestamp }; markOk(); return; }
   const d = hav(f.lat, f.lon, c.latitude, c.longitude), dt = (p.timestamp - f.t) / 1000;
   if (dt <= 0) return; if (d / dt * 3.6 > 25) return;
+  R.spd = { v: R.spd ? 0.6 * R.spd.v + 0.4 * d / dt : d / dt, at: now };
   if (d < 2) { markOk(); return; }
   R.fix = { lat: c.latitude, lon: c.longitude, t: p.timestamp }; markOk();
   if (!R.paused && !R.hold && !R.pre) { R.gpsTot += d; R.stepGps += d; }
@@ -874,20 +1341,39 @@ function onFix(p) {
 function markOk() { if (R.gps !== 'ok') { R.gps = 'ok'; const s = R.seq[R.idx]; R.stepGps = s && s.kind === 'dist' ? estCovered(s) : 0; } }
 const estCovered = s => R.stepMs / 1000 / pace(s.act) * 1000;
 const covered = s => R.gps === 'ok' ? R.stepGps : estCovered(s);
-function enterStep(cue) {
-  const s = R.seq[R.idx]; R.stepMs = R.carry || 0; R.carry = 0; R.stepGps = 0; R.lb = null;
-  if (cue !== false) { beep(880, 0.5); vib([250, 80, 250]); }
-  say(cueText(s), true); renderRun();
+function enterStep(mode, delay) {
+  const s = R.seq[R.idx], nx = R.seq[R.idx + 1], key = AK[s.act];
+  R.stepMs = R.carry || 0; R.carry = 0; R.stepGps = 0; R.lb = null; R.d100 = 0; R.d50 = false;
+  R.vis[R.idx] = (R.vis[R.idx] || 0) + 1;
+  if (mode === 'manual') { fadeRinging(); cancelPending(); try { speechSynthesis.cancel(); } catch (e) {} }
+  if (mode !== 'first') {
+    if (mode === 'manual' || !SCH.has(R.idx + '.' + R.vis[R.idx] + ':tag')) stepCues(R.idx, R.vis[R.idx], Date.now() + (delay || 0)).forEach(schedule);
+    if (document.hidden) notifyStep(s, nx); else vib(HAP[key]);
+  }
+  renderRun();
 }
-function advance() { R.done++; R.idx++; if (R.idx >= R.seq.length) { finish(false); return false; } enterStep(true); return true; }
-/* 3, 2, 1, GO before the first step */
+function advance(mode) { R.done++; R.idx++; if (R.idx >= R.seq.length) { finish(false); return false; } enterStep(mode || 'auto'); return true; }
+/* 3, 2, 1, GO before the first step; the sounds were already queued on the audio clock */
 function preTick() {
   const now = Date.now(), left = R.pre.end - now;
-  if (left > 0) { const n = Math.ceil(left / 1000); if (n !== R.pre.n) { R.pre.n = n; $('pNum').textContent = n; popEl($('pNum')); beep(660, 0.15); vib(40); } return; }
-  if (!R.pre.go) { R.pre.go = now; $('pNum').textContent = 'Go'; $('pNum').className = 'go'; popEl($('pNum')); beep(990, 0.55); vib(200); return; }
+  if (left > 0) { const n = Math.ceil(left / 1000); if (n !== R.pre.n) { R.pre.n = n; $('pNum').textContent = n; popEl($('pNum')); vib(40); if (pocketOn) updatePocket('Get ready', String(n)); } return; }
+  if (!R.pre.go) { R.pre.go = now; $('pNum').textContent = 'Go'; $('pNum').className = 'go'; popEl($('pNum')); vib(HAP[AK[R.seq[0].act]]); return; }
   if (now - R.pre.go < 600) return;
-  R.pre = null; R.last = Date.now(); $('runPre').hidden = true; $('runLive').hidden = false;
-  enterStep(false); $('cPause').focus();
+  const carry = now - R.pre.end; R.pre = null; R.last = now; R.el = carry; R.carry = carry; $('runPre').hidden = true; $('runLive').hidden = false;
+  enterStep('first'); if (!pocketOn) $('cPause').focus();
+}
+function estGap(s, now, dt) {
+  /* geolocation usually stops with the screen off: carry the distance on the last known speed until fixes return */
+  if (R.gps === 'ok' && document.hidden && now - R.fixAt > 4000) {
+    if (!R.estOn) { R.estOn = true; R.estV = R.spd && R.fixAt - R.spd.at < 8000 && R.spd.v > 0.6 ? R.spd.v : 0; }
+    const d = dt / 1000 * (R.estV || 1000 / pace(s.act)); R.stepGps += d; R.gpsTot += d; R.fix = null; R.estHid = true;
+  } else R.estOn = false;
+}
+function distCues(s) {
+  if (!settings.sound || s.kind !== 'dist') return;
+  const cv = covered(s), rem = s.val - cv, n = Math.floor(cv / 100);
+  if (n > R.d100) { R.d100 = n; if (rem > 60) playNow(w => SND.tick(AC, CH.bus, SND.note('D5'), w, 0.12)); }
+  if (!R.d50 && rem <= 50 && s.val >= 100) { R.d50 = true; playNow(w => SND.dbl(AC, CH.bus, SND.note('A4'), w, 0.12)); }
 }
 function tick() {
   if (!R) return;
@@ -897,15 +1383,20 @@ function tick() {
     R.stepMs += dt; R.el += dt; let s = R.seq[R.idx];
     R.est += dt / 1000 / pace(s.act) * 1000;
     if (R.gps === 'wait' && now - R.gpsT0 > 8000) R.gps = 'fail';
+    if (R.gps === 'ok' && G.acc > 30 && now - G.goodAt > 10000) R.gps = 'weak';
+    if (s.kind === 'dist') estGap(s, now, dt);
     let guard = 0;
     while (R && guard++ < 500) { s = R.seq[R.idx];
       if (s.kind === 'time') { const lim = s.val * 1000; if (R.stepMs >= lim) { R.carry = R.stepMs - lim; if (!advance()) return; } else break; }
       else { if (covered(s) >= s.val) { R.carry = 0; if (!advance()) return; } else break; } }
-    s = R.seq[R.idx];
-    if (settings.cd && s.kind === 'time' && s.val > 4) { const n = Math.ceil((s.val * 1000 - R.stepMs) / 1000); if (n >= 1 && n <= 3 && R.lb !== n) { R.lb = n; beep(660, 0.12); vib(60); } }
-    if (!R.half && R.el >= R.plan * 500) { R.half = true; say('Halfway', false); }
+    if (R) distCues(R.seq[R.idx]);
   }
   renderRun();
+}
+function drawShape(key) {
+  const box = $('rShape'); box.textContent = ''; box.classList.remove('go');
+  (SHAPES[key] || []).forEach(d => box.append(h('i', { style: '--y:' + (-d[0] * 9).toFixed(1) + 'px;--d:' + Math.min(1.2, d[2] * 2.5).toFixed(2) + 's;width:' + d[1] + 'px;height:' + d[1] + 'px' })));
+  if (!reduced()) { void box.offsetWidth; box.classList.add('go'); }
 }
 function renderRun() {
   if (!R || R.pre) return; const s = R.seq[R.idx], nx = R.seq[R.idx + 1], key = AK[s.act];
@@ -918,7 +1409,7 @@ function renderRun() {
       clearTimeout(wipeT); wipeT = setTimeout(() => w.classList.remove('go'), 340);
     }
     if (R.ri >= 0) { popEl($('rCount')); popEl($('rAct')); }
-    R.ri = R.idx;
+    R.ri = R.idx; drawShape(key); msKey = '';
     $('rBars').childNodes.forEach((b, i) => { b.className = i < R.idx ? 'done' : ''; b.firstChild.style.width = ''; });
     $('rStrip').querySelectorAll('.strip i').forEach((b, i) => { b.className = (i < R.idx ? 'done ' : i === R.idx ? 'cur ' : '') + 'a-' + AK[R.seq[i].act]; });
     $('rAct').textContent = s.act;
@@ -926,9 +1417,10 @@ function renderRun() {
     $('rNext').textContent = ''; $('rNext').append(h('span', { class: 'k', text: nx ? 'Next' : '' }), h('span', { text: nx ? stepTxt(nx) : 'Last step' }));
     $('cNext').classList.toggle('emph', s.kind === 'dist');
   }
-  let frac, remPlan;
-  if (s.kind === 'time') { const rs = Math.max(0, s.val - R.stepMs / 1000); $('rCount').textContent = fmt(Math.ceil(rs)); $('rUnit').textContent = 'remaining'; frac = R.stepMs / 1000 / s.val; remPlan = rs; }
-  else { const cv = covered(s), rm = Math.max(0, s.val - cv); $('rCount').textContent = String(Math.ceil(rm)); $('rUnit').textContent = 'metres to go'; frac = cv / s.val; remPlan = rm / 1000 * pace(s.act); }
+  let frac, remPlan, big, unit, left;
+  if (s.kind === 'time') { const rs = Math.max(0, s.val - R.stepMs / 1000); big = fmt(Math.ceil(rs)); unit = 'remaining'; left = big + ' left'; frac = R.stepMs / 1000 / s.val; remPlan = rs; }
+  else { const cv = covered(s), rm = Math.max(0, s.val - cv); big = String(Math.ceil(rm)); unit = 'metres to go'; left = big + ' m left'; frac = cv / s.val; remPlan = rm / 1000 * pace(s.act); }
+  $('rCount').textContent = big; $('rUnit').textContent = unit;
   frac = Math.min(1, Math.max(0, frac));
   $('rFill').style.transform = 'scaleX(' + frac.toFixed(4) + ')';
   const cb = $('rBars').childNodes[R.idx]; if (cb) cb.firstChild.style.width = (frac * 100).toFixed(1) + '%';
@@ -938,19 +1430,25 @@ function renderRun() {
   const pb = $('cPause'); const lab = R.paused ? 'Resume' : 'Pause';
   if (pb.getAttribute('aria-label') !== lab) { pb.setAttribute('aria-label', lab); pb.innerHTML = R.paused ? ICON.play : ICON.pause; }
   $('rPause').hidden = !R.paused;
-  const g = $('rGps'); g.classList.toggle('live', R.gps === 'ok');
-  $('rGpsT').textContent = R.gps === 'ok' ? 'GPS live' : R.gps === 'wait' ? 'Finding GPS' : R.gps === 'fail' ? 'Estimated from pace' : 'GPS off';
+  const g = $('rGps'), st = R.gps;
+  g.classList.toggle('live', st === 'ok'); g.classList.toggle('pulse', st === 'wait');
+  $('rGpsT').textContent = st === 'ok' ? 'GPS live' + (G.acc != null ? ' ±' + Math.round(G.acc) + ' m' : '') : st === 'wait' ? 'Finding GPS' : st === 'weak' ? 'GPS weak' : st === 'fail' || st === 'denied' ? 'Estimated' : 'GPS off';
+  $('gpsCard').hidden = st !== 'denied';
+  updatePocket(R.paused ? 'Paused' : s.act, big + (s.kind === 'dist' ? ' m' : ''));
+  msUpdate(s, left, R.stepMs / 1000);
 }
 function togglePause() {
   if (!R || R.pre) return; R.last = Date.now(); R.paused = !R.paused;
-  if (R.paused) { try { speechSynthesis.cancel(); } catch (e) {} }
-  renderRun(); (R.paused ? $('cResume') : $('cPause')).focus();
+  if (R.paused) { try { speechSynthesis.cancel(); } catch (e) {} cancelPending(); bedPause(); playNow(w => SND.pauseS(AC, CH.bus, w)); msState('paused'); }
+  else { bedStart(); kick(); playNow(w => SND.resumeS(AC, CH.bus, w)); msState('playing'); pump(); }
+  renderRun(); if (!pocketOn) (R.paused ? $('cResume') : $('cPause')).focus();
 }
 $('cPause').addEventListener('click', togglePause);
 $('cResume').addEventListener('click', togglePause);
-function nextStep() { if (!R || R.pre) return; R.carry = 0; advance(); }
+function nextStep() { if (!R || R.pre) return; R.carry = 0; playNow(w => SND.tick(AC, CH.bus, SND.note('E5'), w, 0.16)); advance('manual'); }
+function prevStep() { if (!R || R.pre) return; R.carry = 0; playNow(w => SND.tick(AC, CH.bus, SND.note('E5'), w, 0.16)); if (R.idx > 0) { R.idx--; if (R.done > 0) R.done--; } enterStep('manual', 160); }
 $('cNext').addEventListener('click', nextStep);
-$('cPrev').addEventListener('click', () => { if (!R || R.pre) return; R.carry = 0; if (R.idx > 0) { R.idx--; if (R.done > 0) R.done--; } enterStep(true); });
+$('cPrev').addEventListener('click', prevStep);
 function askEnd() {
   if (!R) return;
   if (R.pre) { stopRun(); R = null; popLayersTo(0); return; }
@@ -969,10 +1467,16 @@ function holdEnd(btn) {
   btn.addEventListener('click', e => { if (e.detail === 0) askEnd(); });
 }
 holdEnd($('cEnd')); holdEnd($('cEnd2'));
-function stopRun() { if (timer) { clearInterval(timer); timer = null; } if (watchId != null) { try { navigator.geolocation.clearWatch(watchId); } catch (e) {} watchId = null; } relWL(); try { speechSynthesis.cancel(); } catch (e) {} }
+function stopRun() {
+  if (timer) { clearInterval(timer); timer = null; } if (pumpT) { clearInterval(pumpT); pumpT = null; }
+  stopWatch(); relWL(); try { speechSynthesis.cancel(); } catch (e) {}
+  bedStop(); msClear(); closeNotifs(); exitPocket();
+}
 function finish(ended) {
-  if (!R) return; const r = R; stopRun(); R = null;
-  if (!ended) { beep(1000, 0.7); vib([400, 100, 400, 100, 600]); say('Workout complete', true); }
+  if (!R) return; const r = R;
+  if (ended) { cancelPending(); fadeRinging(); } else cancelPending(['fin']);
+  stopRun(); R = null;
+  if (!ended) { if (!SCH.has('fin')) playNow(w => SND.tag('finish', AC, CH.bus, w)); vib(HAP.finish); if (settings.voice !== 'off') setTimeout(() => speak('Workout complete.'), 900); }
   const meas = r.gps === 'ok' && r.gpsTot > 0, dist = meas ? r.gpsTot : r.est, dur = Math.round(r.el / 1000);
   const keep = dur >= 5;
   if (keep) { hist.unshift({ id: Date.now().toString(36), ts: Date.now(), name: r.w.name, dur, dist: Math.round(dist), measured: meas, completed: !ended }); hist = hist.slice(0, 500); S.set('history', hist); }
@@ -982,18 +1486,22 @@ function finish(ended) {
   $('fName').textContent = r.w.name;
   const fs = $('fStats'); fs.textContent = ''; fs.append(timeStat(dur, 'Time'), distStat(dist), stat(r.done + '/' + r.seq.length, '', 'Steps'));
   $('fStrip').replaceChildren(strip(r.seq));
-  $('fNote').textContent = meas ? 'Distance measured by GPS.' : 'Distance estimated from your pace.';
+  $('fNote').textContent = (meas ? 'Distance measured by GPS.' : 'Distance estimated from your pace.') + (meas && r.estHid ? ' Estimated while screen was off.' : '');
   $('fSaved').hidden = !keep; if (!keep) $('fNote').textContent += ' Too short to save.';
   $('runPre').hidden = true; $('runLive').hidden = true; $('runFin').hidden = false;
   if (tab === 'history') renderHistory();
 }
 $('fDone').addEventListener('click', () => { popLayersTo(0); renderWorkouts(); });
-document.addEventListener('visibilitychange', () => { if (R) { tick(); if (document.visibilityState === 'visible') getWL(); } });
+document.addEventListener('visibilitychange', () => { kick(); if (R) { if (!document.hidden) getWL(); tick(); pump(); } });
+window.__iv = { SND, get R() { return R; }, get AC() { return AC; }, SCH, get BED() { return BED; }, G, pump, settings,
+  dbg: () => ({ ac: AC && AC.state, sched: [...SCH.values()].map(e => ({ id: e.id, at: e.at, done: e.done, kind: e.kind })), bed: BED && { paused: BED.paused, loop: BED.loop, muted: BED.muted, dur: BED.duration }, pocket: pocketOn }),
+  render: async (name, secs, vol) => { const sr = 44100, oc = new OfflineAudioContext(2, sr * (secs || 4), sr), ch = SND.chain(oc, vol == null ? settings.volume : vol); SND.demo(name, oc, ch.bus, 0.05); const b = await oc.startRendering(); return [Array.from(b.getChannelData(0)), Array.from(b.getChannelData(1))]; } };
 
 /* ---------- service worker, with an update prompt ---------- */
 if ('serviceWorker' in navigator) {
   addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js', { scope: './' }).then(reg => {
+      swReg = reg; navigator.serviceWorker.ready.then(r => { swReg = r; }).catch(() => {});
       const offer = w => toast('Updated. Reload to use the new version', { label: 'Reload', sticky: true, fn: () => w.postMessage('skipWaiting') });
       if (reg.waiting && navigator.serviceWorker.controller) offer(reg.waiting);
       reg.addEventListener('updatefound', () => { const n = reg.installing; if (n) n.addEventListener('statechange', () => { if (n.state === 'installed' && navigator.serviceWorker.controller) offer(n); }); });
@@ -1008,7 +1516,8 @@ if ('serviceWorker' in navigator) {
 applyTheme(); renderWorkouts(); renderInstall(); go('workouts');
 try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme); } catch (e) {}
 (() => { const q = new URLSearchParams(location.search);
-  if (q.get('start') === 'last') { const id = S.get('last'); if (id && all().some(w => w.id === id)) { selId = id; renderWorkouts(); } history.replaceState({ iv: 'root' }, '', location.pathname); startRun(); } })();
+  if (q.get('start') === 'last') { const id = S.get('last'); if (id && all().some(w => w.id === id)) { selId = id; renderWorkouts(); } history.replaceState({ iv: 'root' }, '', location.pathname); startRun({ pocket: hasDistSteps(cur()) && settings.distPocket }); } })();
+try { document.addEventListener('pointerdown', () => { if (R && !R.paused) kick(); }); } catch (e) {}
 })();
 </script>
 </body>
