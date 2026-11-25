@@ -1,8 +1,8 @@
 /* Intervals service worker.
    Bump VERSION whenever the app shell changes (index.html, icons, this file), and keep APP_VERSION in index.html in step.
    A new VERSION makes a new shell cache; the old one is deleted on activate. */
-const VERSION = "1.2.0";
-const PRECACHE = ["./", "index.html", "icon.svg", "icon-192.png", "icon-512.png", "icon-maskable-512.png", "apple-touch-icon.png"];
+const VERSION = "1.2.1";
+const PRECACHE = ["./", "index.html", "icon.svg", "icon-192.png", "icon-512.png", "icon-maskable-512.png", "apple-touch-icon.png", "badge-96.png"];
 const FONTS = "https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap";
 const SHELL = "intervals-shell-" + VERSION, RUNTIME = "intervals-runtime";
 

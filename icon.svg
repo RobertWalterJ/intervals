@@ -1,11 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#0E1B22"/>
-  <g transform="rotate(-90 256 280)" fill="none" stroke-width="58">
-    <circle cx="256" cy="280" r="148" pathLength="928" stroke="#FF6A4A" stroke-linecap="round" stroke-dasharray="104 128" stroke-dashoffset="-8"/>
-    <circle cx="256" cy="280" r="148" pathLength="928" stroke="#8EE6CF" stroke-linecap="round" stroke-dasharray="48 184" stroke-dashoffset="-148"/>
-  </g>
-  <rect x="226" y="52" width="60" height="30" rx="10" fill="#E5EDF0"/>
-  <rect x="244" y="78" width="24" height="26" fill="#E5EDF0"/>
-  <path d="M256 280 L256 204" stroke="#E5EDF0" stroke-width="16" stroke-linecap="round"/>
-  <circle cx="256" cy="280" r="18" fill="#E5EDF0"/>
+  <rect width="512" height="512" rx="112" fill="#000"/>
+  <path d="M101.0 356V266.0a6 6 0 0 1 6 -6h46.0a6 6 0 0 1 6 6V356z" fill="#FFE100"/>
+  <path d="M169.0 356V130.0a6 6 0 0 1 6 -6h18.0a6 6 0 0 1 6 6V356z" fill="#FF4B1F"/>
+  <path d="M209.0 356V278.0a6 6 0 0 1 6 -6h10.0a6 6 0 0 1 6 6V356z" fill="#19E3B1"/>
+  <path d="M241.0 356V130.0a6 6 0 0 1 6 -6h18.0a6 6 0 0 1 6 6V356z" fill="#FF4B1F"/>
+  <path d="M281.0 356V278.0a6 6 0 0 1 6 -6h10.0a6 6 0 0 1 6 6V356z" fill="#19E3B1"/>
+  <path d="M313.0 356V130.0a6 6 0 0 1 6 -6h18.0a6 6 0 0 1 6 6V356z" fill="#FF4B1F"/>
+  <path d="M353.0 356V266.0a6 6 0 0 1 6 -6h46.0a6 6 0 0 1 6 6V356z" fill="#1F5BFF"/>
 </svg>

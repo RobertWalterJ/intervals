@@ -517,7 +517,7 @@ button.srow{width:100%;background:none;border-left:0;border-right:0;border-top:0
 <script>
 (() => {
 'use strict';
-const APP_VERSION = '1.2.0'; /* keep in step with VERSION in sw.js */
+const APP_VERSION = '1.2.1'; /* keep in step with VERSION in sw.js */
 const $ = id => document.getElementById(id);
 const h = (tag, a = {}, kids = []) => {
   const e = document.createElement(tag);
@@ -1240,7 +1240,7 @@ function msClear() { if (!MS) return; try { MS.metadata = null; MS.playbackState
 let swReg = null;
 function notifyStep(s, nx) {
   if (!settings.alerts || !document.hidden || !swReg || !('Notification' in window) || Notification.permission !== 'granted') return;
-  try { swReg.showNotification(s.act.toUpperCase() + ' · ' + (s.kind === 'time' ? fmt(s.val) : s.val + ' m'), { body: nx ? 'Up next: ' + stepTxt(nx) : 'Last step', tag: 'intervals-step', renotify: true, silent: false, icon: 'icon-192.png', badge: 'icon-192.png', vibrate: HAP[AK[s.act]], requireInteraction: false }).catch(() => {}); } catch (e) {}
+  try { swReg.showNotification(s.act.toUpperCase() + ' · ' + (s.kind === 'time' ? fmt(s.val) : s.val + ' m'), { body: nx ? 'Up next: ' + stepTxt(nx) : 'Last step', tag: 'intervals-step', renotify: true, silent: false, icon: 'icon-192.png', badge: 'badge-96.png', vibrate: HAP[AK[s.act]], requireInteraction: false }).catch(() => {}); } catch (e) {}
 }
 function closeNotifs() { try { if (swReg) swReg.getNotifications({ tag: 'intervals-step' }).then(l => l.forEach(n => n.close())).catch(() => {}); } catch (e) {} }
 
