@@ -1,6 +1,6 @@
 # Intervals
 
-A run and walk interval timer that installs like an app and works offline. Presets, a builder with steps and repeat blocks, time or distance targets, voice and beep cues, GPS distance with a pace fallback, and a history of finished sessions.
+A run and walk interval timer that installs like an app and works offline. The design is athletic minimal: Archivo type, a monochrome base, vivid activity colours and an interval strip that draws each workout as a bar chart. Presets, a builder with steps and repeat blocks, time or distance targets, voice and beep cues, GPS distance with a pace fallback, and a history of finished sessions.
 
 Live at https://robertwalterj.github.io/intervals/
 

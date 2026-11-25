@@ -1,9 +1,9 @@
 /* Intervals service worker.
    Bump VERSION whenever the app shell changes (index.html, icons, this file), and keep APP_VERSION in index.html in step.
    A new VERSION makes a new shell cache; the old one is deleted on activate. */
-const VERSION = "1.0.0";
+const VERSION = "1.1.0";
 const PRECACHE = ["./", "index.html", "icon.svg", "icon-192.png", "icon-512.png", "icon-maskable-512.png", "apple-touch-icon.png"];
-const FONTS = "https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&family=IBM+Plex+Mono:wght@400;500&display=swap";
+const FONTS = "https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap";
 const SHELL = "intervals-shell-" + VERSION, RUNTIME = "intervals-runtime";
 
 self.addEventListener("install", (e) => {
